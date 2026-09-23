@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="theme-color" content="#fff8e1">
+  <title>Google Keep</title>
+  <style>
+    :root {
+      --keep-bg: #fff8e1; /* Authentic Google Keep pale yellow */
+      --keep-text: #202124;
+      --keep-placeholder: #5f6368;
+      --keep-icon: #5f6368;
+      --keep-meta: #5f6368;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      background-color: var(--keep-bg);
+      color: var(--keep-text);
+      overflow-x: hidden;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 100vh;
+      min-height: -webkit-fill-available;
+    }
+
+    /* Keep Top App Bar */
+    header {
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      user-select: none;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .icon-btn {
+      background: none;
+      border: none;
+      color: var(--keep-icon);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px;
+      border-radius: 50%;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .icon-btn:active {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    /* Note Container */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 12px 20px 20px 20px;
+      overflow-y: auto;
+    }
+
+    .title-field {
+      font-size: 1.35rem;
+      font-weight: 500;
+      color: var(--keep-text);
+      outline: none;
+      border: none;
+      background: transparent;
+      margin-bottom: 14px;
+      line-height: 1.3;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .title-field:empty::before {
+      content: "Title";
+      color: var(--keep-placeholder);
+    }
+
+    .note-field {
+      flex: 1;
+      font-size: 1.05rem;
+      line-height: 1.5;
+      color: var(--keep-text);
+      outline: none;
+      border: none;
+      background: transparent;
+      white-space: pre-wrap;
+      word-break: break-word;
+      min-height: 250px;
+    }
+
+    .note-field:empty::before {
+      content: "Note";
+      color: var(--keep-placeholder);
+    }
+
+    /* Keep Bottom Action Bar */
+    footer {
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      user-select: none;
+      background-color: var(--keep-bg);
+      border-top: 1px solid rgba(0, 0, 0, 0.03);
+    }
+
+    .timestamp {
+      font-size: 0.78rem;
+      color: var(--keep-meta);
+      font-weight: 400;
+      letter-spacing: 0.2px;
+    }
+
+    .bottom-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* Indicator dot in header */
+    #menu-dot-2 {
+      transition: opacity 0.2s ease;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Google Keep Header -->
+  <header>
+    <button class="icon-btn" aria-label="Navigate back">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+    </button>
+    <div class="top-actions">
+      <button class="icon-btn" aria-label="Pin note">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="17" x2="12" y2="22"></line>
+          <path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v7.55l-1.78.9A2 2 0 0 0 5 15.24Z"></path>
+        </svg>
+      </button>
+      <button class="icon-btn" aria-label="Add reminder">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+        </svg>
+      </button>
+      <button class="icon-btn" aria-label="Archive note">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="21 8 21 21 3 21 3 8"></polyline>
+          <rect x="1" y="3" width="22" height="5"></rect>
+          <line x1="10" y1="12" x2="14" y2="12"></line>
+        </svg>
+      </button>
+      <!-- Overflow menu dots (Middle dot acts as stack indicator) -->
+      <button class="icon-btn" aria-label="More options">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+          <circle cx="12" cy="5" r="1.5"></circle>
+          <circle id="menu-dot-2" cx="12" cy="12" r="1.5"></circle>
+          <circle cx="12" cy="19" r="1.5"></circle>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Note Input Area -->
+  <main>
+    <div id="note-title" class="title-field" contenteditable="true" spellcheck="false" autocomplete="off"></div>
+    <div id="note-body" class="note-field" contenteditable="true" spellcheck="false" autocomplete="off"></div>
+  </main>
+
+  <!-- Google Keep Bottom Action Bar -->
+  <footer>
+    <div id="status-tag" class="timestamp">Edited 10:42 AM</div>
+    <div class="bottom-actions">
+      <!-- Checkbox / List Icon -->
+      <button class="icon-btn" aria-label="New list">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 11 12 14 22 4"></polyline>
+          <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+        </svg>
+      </button>
+      <!-- Hidden Stack Switcher: Image Icon -->
+      <button id="secret-image-btn" class="icon-btn" aria-label="Add image">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+          <circle cx="8.5" cy="8.5" r="1.5"></circle>
+          <polyline points="21 15 16 10 5 21"></polyline>
+        </svg>
+      </button>
+      <!-- Color Palette Icon -->
+      <button class="icon-btn" aria-label="Change color">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"></circle>
+          <circle cx="17.5" cy="10.5" r=".5" fill="currentColor"></circle>
+          <circle cx="8.5" cy="7.5" r=".5" fill="currentColor"></circle>
+          <circle cx="6.5" cy="12.5" r=".5" fill="currentColor"></circle>
+          <path d="M12 2C6.49 2 2 6.49 2 12s4.49 10 10 10c1.38 0 2.5-1.12 2.5-2.5 0-.61-.23-1.21-.64-1.67-.08-.1-.13-.22-.13-.33 0-.28.22-.5.5-.5H16c3.31 0 6-2.69 6-6 0-4.96-4.49-9-10-9z"></path>
+        </svg>
+      </button>
+    </div>
+  </footer>
+
+  <script>
+    // 1. Stack Definitions (1-based index from top to face)
+    const STACKS = {
+      mnemonica: [
+        "4C", "2H", "7D", "3C", "4H", "6D", "AS", "5H", "9S", "2S", "QH", "3D", "QC",
+        "8H", "6S", "5S", "9H", "KC", "2D", "JH", "3S", "8S", "6H", "10C", "5D", "KD",
+        "2C", "3H", "8D", "5C", "KS", "JD", "8C", "10S", "KH", "JC", "7S", "10H", "AD",
+        "4S", "7H", "4D", "AC", "9C", "JS", "QD", "7C", "QS", "10D", "6C", "AH", "9D"
+      ],
+      aronson: [
+        "JS", "KC", "5C", "2H", "9S", "AS", "3H", "6C", "8D", "AC", "10S", "5H", "2D",
+        "KD", "7D", "8C", "3S", "AD", "7S", "5S", "QD", "AH", "8S", "3D", "7H", "4D",
+        "4S", "4C", "5D", "6H", "10H", "JC", "JH", "10C", "JD", "4H", "10H", "7C", "QS",
+        "8H", "6S", "2C", "9H", "8D", "9C", "2S", "QH", "3C", "6D", "9D", "KS", "QC"
+      ]
+    };
+
+    // Full Card Display Names
+    const CARD_NAMES = {
+      "AC": "Ace of Clubs", "2C": "2 of Clubs", "3C": "3 of Clubs", "4C": "4 of Clubs",
+      "5C": "5 of Clubs", "6C": "6 of Clubs", "7C": "7 of Clubs", "8C": "8 of Clubs",
+      "9C": "9 of Clubs", "10C": "10 of Clubs", "JC": "Jack of Clubs", "QC": "Queen of Clubs",
+      "KC": "King of Clubs",
+      "AD": "Ace of Diamonds", "2D": "2 of Diamonds", "3D": "3 of Diamonds", "4D": "4 of Diamonds",
+      "5D": "5 of Diamonds", "6D": "6 of Diamonds", "7D": "7 of Diamonds", "8D": "8 of Diamonds",
+      "9D": "9 of Diamonds", "10D": "10 of Diamonds", "JD": "Jack of Diamonds", "QD": "Queen of Diamonds",
+      "KD": "King of Diamonds",
+      "AH": "Ace of Hearts", "2H": "2 of Hearts", "3H": "3 of Hearts", "4H": "4 of Hearts",
+      "5H": "5 of Hearts", "6H": "6 of Hearts", "7H": "7 of Hearts", "8H": "8 of Hearts",
+      "9H": "9 of Hearts", "10H": "10 of Hearts", "JH": "Jack of Hearts", "QH": "Queen of Hearts",
+      "KH": "King of Hearts",
+      "AS": "Ace of Spades", "2S": "2 of Spades", "3S": "3 of Spades", "4S": "4 of Spades",
+      "5S": "5 of Spades", "6S": "6 of Spades", "7S": "7 of Spades", "8S": "8 of Spades",
+      "9S": "9 of Spades", "10S": "10 of Spades", "JS": "Jack of Spades", "QS": "Queen of Spades",
+      "KS": "King of Spades"
+    };
+
+    // Natural Language Card Parser
+    const VALUE_MAP = {
+      "ace": "A", "a": "A", "1": "A",
+      "two": "2", "2": "2",
+      "three": "3", "3": "3",
+      "four": "4", "4": "4",
+      "five": "5", "5": "5",
+      "six": "6", "6": "6",
+      "seven": "7", "7": "7",
+      "eight": "8", "8": "8",
+      "nine": "9", "9": "9",
+      "ten": "10", "10": "10", "t": "10",
+      "jack": "J", "j": "J",
+      "queen": "Q", "q": "Q",
+      "king": "K", "k": "K"
+    };
+
+    const SUIT_MAP = {
+      "hearts": "H", "heart": "H", "h": "H",
+      "diamonds": "D", "diamond": "D", "d": "D",
+      "clubs": "C", "club": "C", "c": "C",
+      "spades": "S", "spade": "S", "s": "S"
+    };
+
+    function parseCardString(text) {
+      if (!text) return null;
+      let cleaned = text.toLowerCase()
+        .replace(/of/g, " ")
+        .replace(/[^a-z0-9]/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+
+      let parts = cleaned.split(" ");
+      if (parts.length === 0) return null;
+
+      // Check adjacent pairs (e.g. "seven" "hearts" or "7" "h")
+      for (let i = 0; i < parts.length; i++) {
+        let val = VALUE_MAP[parts[i]];
+        if (val) {
+          if (i + 1 < parts.length && SUIT_MAP[parts[i + 1]]) {
+            return val + SUIT_MAP[parts[i + 1]];
+          }
+        }
+      }
+
+      // Check single concatenated tokens (e.g. "7h", "10c", "aceofspades", "kinghearts")
+      for (let i = 0; i < parts.length; i++) {
+        let token = parts[i];
+        for (let vKey in VALUE_MAP) {
+          if (token.startsWith(vKey)) {
+            let remainder = token.slice(vKey.length);
+            if (SUIT_MAP[remainder]) {
+              return VALUE_MAP[vKey] + SUIT_MAP[remainder];
+            }
+          }
+        }
+      }
+
+      return null;
+    }
+
+    // State Initialization
+    let activeStack = localStorage.getItem("google_keep_stack") || "mnemonica";
+    if (activeStack !== "mnemonica" && activeStack !== "aronson") {
+      activeStack = "mnemonica";
+    }
+
+    const noteTitle = document.getElementById("note-title");
+    const noteBody = document.getElementById("note-body");
+    const statusTag = document.getElementById("status-tag");
+    const secretImageBtn = document.getElementById("secret-image-btn");
+    const menuDot2 = document.getElementById("menu-dot-2");
+
+    // Covert Visual Indicator Update
+    function updateIndicator() {
+      if (activeStack === "mnemonica") {
+        menuDot2.style.opacity = "1";
+      } else {
+        menuDot2.style.opacity = "0.32";
+      }
+    }
+
+    // ACAAN Cut Calculation Logic
+    function recalculate() {
+      const fullText = (noteTitle.innerText + " \n " + noteBody.innerText).trim();
+
+      // Find any number between 1 and 52
+      let targetNumber = null;
+      let numRegex = /\b([1-9]|[1-4][0-9]|5[0-2])\b/g;
+      let match;
+      let numbersFound = [];
+      while ((match = numRegex.exec(fullText)) !== null) {
+        numbersFound.push(parseInt(match[1], 10));
+      }
+
+      // Detect card from input
+      let detectedCard = parseCardString(fullText);
+
+      // Disambiguate if card value itself had a digit (e.g. "7 of hearts 25")
+      if (detectedCard && numbersFound.length > 0) {
+        let cardValDigit = detectedCard.replace(/[A-Z]/g, "");
+        if (numbersFound.length === 1 && cardValDigit && parseInt(cardValDigit, 10) === numbersFound[0]) {
+          targetNumber = null;
+        } else if (numbersFound.length >= 2 && cardValDigit) {
+          let cardDigitVal = parseInt(cardValDigit, 10);
+          for (let n of numbersFound) {
+            if (n !== cardDigitVal) {
+              targetNumber = n;
+              break;
+            }
+          }
+        } else {
+          targetNumber = numbersFound[numbersFound.length - 1];
+        }
+      }
+
+      // If both card and target number are valid, compute ACAAN cut
+      if (detectedCard && targetNumber && targetNumber >= 1 && targetNumber <= 52) {
+        const stack = STACKS[activeStack];
+        let cardPosition = stack.indexOf(detectedCard) + 1; // 1 to 52
+
+        if (cardPosition > 0) {
+          // K is the number of cards to cut so that cardPosition moves to targetNumber
+          let cutAmount = (cardPosition - targetNumber + 52) % 52;
+          if (cutAmount === 0) cutAmount = 52;
+
+          let cutCardCode = stack[cutAmount - 1];
+          let cutCardName = CARD_NAMES[cutCardCode] || cutCardCode;
+
+          // Innocent stealth output in place of timestamp
+          statusTag.innerText = "Edited " + cutCardName + " • " + cutAmount;
+          return;
+        }
+      }
+
+      // Default innocent timestamp reflects active stack
+      // Mnemonica = AM, Aronson = PM
+      statusTag.innerText = (activeStack === "mnemonica") ? "Edited 10:42 AM" : "Edited 10:42 PM";
+    }
+
+    // Covert Stack Toggle (Image Icon Click)
+    secretImageBtn.addEventListener("click", function(e) {
+      e.preventDefault();
+      activeStack = (activeStack === "mnemonica") ? "aronson" : "mnemonica";
+      localStorage.setItem("google_keep_stack", activeStack);
+
+      updateIndicator();
+      recalculate();
+
+      // Silent vibration feedback
+      if (navigator.vibrate) {
+        try {
+          if (activeStack === "mnemonica") {
+            navigator.vibrate(35); // 1 buzz = Mnemonica
+          } else {
+            navigator.vibrate([35, 65, 35]); // 2 buzzes = Aronson
+          }
+        } catch (err) {
+          // Suppress if vibration not permitted
+        }
+      }
+    });
+
+    // Real-time calculation listeners
+    noteTitle.addEventListener("input", recalculate);
+    noteBody.addEventListener("input", recalculate);
+
+    // Initial render
+    updateIndicator();
+    recalculate();
+  </script>
+</body>
+</html>
